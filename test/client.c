@@ -58,7 +58,7 @@ int main(int argc, char *argv[])
             exit(-1);
         }
         if(i % 5000 == 0)
-            printf("Test: %07d / %07d, (%0.2f%%)\n", i, 1000000, (float)i / 10000);
+            printf("Test: %07l / %07l, (%0.2f%%)\n", i, 1000000, (float)i / 10000);
         /*
         str[len]='\0';
         printf("Size: %d\n", len);
