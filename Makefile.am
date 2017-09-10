@@ -21,4 +21,4 @@ ACLOCAL_AMFLAGS = ${ACLOCAL_FLAGS} -I m4
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = libcpnet.pc
 
-EXTRADIST = README.md
+EXTRA_DIST = README.md

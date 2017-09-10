@@ -7,6 +7,8 @@
 ![GCC](https://img.shields.io/badge/GCC-4.8.5-blue.svg)
 ![MSVC](https://img.shields.io/badge/MSVC-14-red.svg)
 ![license](https://img.shields.io/badge/license-GPLv3-blue.svg)
+[![Build Status](https://travis-ci.org/soroush/libcpnet.svg?branch=dev)](https://travis-ci.org/soroush/libcpnet)
+
 
 A thin wrapper cross-platform networking API on socket level. This library is
 a very simple thin wrapper around POSIX (Berkeley) socket implementation and 
