@@ -7,6 +7,7 @@
 ![GCC](https://img.shields.io/badge/GCC-4.8.5-blue.svg)
 ![MSVC](https://img.shields.io/badge/MSVC-14-red.svg)
 ![license](https://img.shields.io/badge/license-GPLv3-blue.svg)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/92107eda69f8404495ee2a4953c72d9b)](https://www.codacy.com/app/soroush/libcpnet?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=soroush/libcpnet&amp;utm_campaign=Badge_Grade)
 [![Build Status](https://travis-ci.org/soroush/libcpnet.svg?branch=dev)](https://travis-ci.org/soroush/libcpnet)
 
 A thin wrapper cross-platform networking API on socket level. This library is
