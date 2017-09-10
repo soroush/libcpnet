@@ -54,4 +54,4 @@ matrix:
 before_install:
     - eval "${MATRIX_EVAL}"
 
-script: autoreconf -f -i && ./configure && make && make check
+script: autoreconf -f -i && ./configure && make && make -j2 check
