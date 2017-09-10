@@ -236,9 +236,10 @@ ssize_t net_write(socket_t socketfd, const char *buffer, size_t len)
 CPNET_NETWORK_API int net_clean()
 {
 #ifdef _WIN32
-    WSACleanup();
+    return WSACleanup();
+#else
+	return 0;
 #endif /* _WIN32 */
-
 }
 
 CPNET_NETWORK_API
@@ -263,7 +264,11 @@ static void net_set_last_error()
 CPNET_NETWORK_API
 void net_close(socket_t socketfd)
 {
+#if defined(_WIN32)
     close(socketfd);
+#elif defined(__linux__)
+	_close(socketfd);
+#endif
 }
 
 
