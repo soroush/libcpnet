@@ -36,7 +36,8 @@ int main(int argc, char *argv[])
     /* Connect to port 50001 */
     net_connect(socket, "127.0.0.1", 50001);
     /* Echo each message */
-    for(int i = 0; i < 1000000; ++i) {
+    size_t i = 0;
+    for(i = 0; i < 1000000; ++i) {
         int len = (rand() % (1024 - 10)) + 10;
         /* char *str = randstring(len); */
         char *str = randdata(len);
