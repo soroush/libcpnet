@@ -160,7 +160,7 @@ ssize_t net_read(socket_t socketfd, char *buffer, size_t len)
 #if defined (__linux__)
     ssize_t retval = recv(socketfd, buffer, len, MSG_NOSIGNAL);
 #elif defined(_WIN32)
-    ssize_t retval = recv(socketfd, buffer, len, 0);
+    ssize_t retval = (ssize_t)(recv(socketfd, buffer, (int)len, 0));
 #endif
     if(retval <= 0)
         net_set_last_error();
@@ -179,7 +179,7 @@ ssize_t net_read_packet(socket_t socketfd, char *buffer,
 #if defined (__linux__)
     recv_size = recvfrom(socketfd, buffer, len, MSG_NOSIGNAL, &peer, &peer_len);
 #elif defined(_WIN32)
-    recv_size = recvfrom(socketfd, buffer, len, NULL, &peer, &peer_len);
+    recv_size = (ssize_t)recvfrom(socketfd, buffer, (int)len, 0, &peer, &peer_len);
 #endif
     if(peer.sa_family == AF_INET) {
         peer_addr = (struct sockaddr_in *)(&peer);
@@ -211,7 +211,7 @@ ssize_t net_write_packet(socket_t socketfd, char *buffer, size_t len,
     send_size = sendto(socketfd, buffer, len, MSG_NOSIGNAL,
                        (struct sockaddr *) &cl_addr, sizeof(cl_addr));
 #elif defined(_WIN32)
-    send_size = sendto(socketfd, buffer, len, 0,
+    send_size = sendto(socketfd, buffer, (int)len, 0,
                        (struct sockaddr *) &cl_addr, sizeof(cl_addr));
 #endif
     if(send_size != len) {
@@ -254,7 +254,7 @@ static void net_set_last_error()
     FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
                   NULL, WSAGetLastError(),
                   MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
-                  (LPTSTR)fde_network_last_error, 0, NULL);
+                  (LPTSTR)cpnet_last_error, 0, NULL);
 #elif defined(__linux__)
     strcpy(cpnet_last_error, strerror(errno));
 #endif
@@ -264,9 +264,9 @@ CPNET_NETWORK_API
 void net_close(socket_t socketfd)
 {
 #if defined(_WIN32)
-    close(socketfd);
+	closesocket(socketfd);
 #elif defined(__linux__)
-	_close(socketfd);
+	close(socketfd);
 #endif
 }
 
@@ -278,7 +278,7 @@ int net_setsockopt(socket_t s, int option)
     switch(option) {
     case SO_BROADCAST:
         ret = setsockopt(s, SOL_SOCKET, SO_BROADCAST,
-                         &dummy, sizeof(dummy));
+                         (const char*)(&dummy), sizeof(dummy));
         break;
     default:
         break;
