@@ -7,6 +7,7 @@
 ![GCC](https://img.shields.io/badge/GCC-4.8.5-blue.svg)
 ![MSVC](https://img.shields.io/badge/MSVC-14-red.svg)
 ![license](https://img.shields.io/badge/license-GPLv3-blue.svg)
+[![Build status](https://ci.appveyor.com/api/projects/status/aavivsw7msa57jgp?svg=true)](https://ci.appveyor.com/project/soroush/libcpnet)
 [![Build Status](https://travis-ci.org/soroush/libcpnet.svg?branch=dev)](https://travis-ci.org/soroush/dev)
 
 
