@@ -8,8 +8,8 @@
 ![MSVC](https://img.shields.io/badge/MSVC-14-red.svg)
 ![license](https://img.shields.io/badge/license-GPLv3-blue.svg)
 [![Build status](https://ci.appveyor.com/api/projects/status/aavivsw7msa57jgp?svg=true)](https://ci.appveyor.com/project/soroush/libcpnet)
-[![Build Status](https://travis-ci.org/soroush/libcpnet.svg?branch=dev)](https://travis-ci.org/soroush/dev)
-
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/92107eda69f8404495ee2a4953c72d9b)](https://www.codacy.com/app/soroush/libcpnet?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=soroush/libcpnet&amp;utm_campaign=Badge_Grade)
+[![Build Status](https://travis-ci.org/soroush/libcpnet.svg?branch=dev)](https://travis-ci.org/soroush/libcpnet)
 
 A thin wrapper cross-platform networking API on socket level. This library is
 a very simple thin wrapper around POSIX (Berkeley) socket implementation and 

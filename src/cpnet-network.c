@@ -157,11 +157,10 @@ socket_t net_accept(socket_t socketfd, char *addr, uint16_t *port)
 CPNET_NETWORK_API
 ssize_t net_read(socket_t socketfd, char *buffer, size_t len)
 {
-    ssize_t retval = -1;
 #if defined (__linux__)
-    retval = recv(socketfd, buffer, len, MSG_NOSIGNAL);
+    ssize_t retval = recv(socketfd, buffer, len, MSG_NOSIGNAL);
 #elif defined(_WIN32)
-    retval = recv(socketfd, buffer, len, 0);
+    ssize_t retval = recv(socketfd, buffer, len, 0);
 #endif
     if(retval <= 0)
         net_set_last_error();
@@ -198,7 +197,7 @@ CPNET_NETWORK_API
 ssize_t net_write_packet(socket_t socketfd, char *buffer, size_t len,
                          const char *address, uint16_t port)
 {
-    ssize_t send_size;
+    ssize_t send_size = -1;
     struct sockaddr_in cl_addr;
     memset((void *)&cl_addr, '\0', sizeof(cl_addr));
     cl_addr.sin_family = AF_INET;

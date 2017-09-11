@@ -178,10 +178,10 @@ char *randstring(size_t length)
 
     static char charset[] = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789,.-#'?!";
     char *random_string = NULL;
-    size_t n = 0;
     if(length) {
         random_string = malloc(sizeof(char) * (length + 1));
         if(random_string) {
+            size_t n = 0;
             for(n = 0; n < length; n++) {
                 int key = rand() % (int)(sizeof(charset) - 1);
                 random_string[n] = charset[key];
