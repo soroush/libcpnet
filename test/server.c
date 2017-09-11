@@ -29,11 +29,11 @@ int main(int argc, char *argv[])
     net_init();
     /* Start a server */
     socket_t socket = net_socket(SOCK_STREAM);
-    /* Bind on port 50001 */
-    uint16_t port = 50001;
+    /* Bind on port 50002 */
+    uint16_t port = 50002;
     if(net_bind(socket, NULL, &port) != 0) {
         printf("System error description:\n%s\n", net_last_error());
-        exit(77);
+        exit(-1);
     }
     /* Listen for incomming connections */
     net_listen(socket, 10);
@@ -47,7 +47,7 @@ int main(int argc, char *argv[])
         ssize_t r = net_read(client, buffer, 1024);
         if(r < 0) {
             //printf(strerror("Unable to read from socket!"));
-            exit(77);
+            exit(-1);
         }
         if(r == 0) {
             printf("Remote client stopped\n");

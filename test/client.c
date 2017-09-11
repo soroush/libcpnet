@@ -33,8 +33,16 @@ int main(int argc, char *argv[])
     net_init();
     /* Start a client */
     socket_t socket = net_socket(SOCK_STREAM);
+    size_t tries = 5;
     /* Connect to port 50001 */
-    net_connect(socket, "127.0.0.1", 50001);
+    while(net_connect(socket, "127.0.0.1", 50002) != 0 && tries) {
+        sleep(2);
+        tries--;
+        if(!tries){
+            printf("Unable to connect!\n");
+            exit(-1);
+        }
+    }
     /* Echo each message */
     size_t i = 0;
     for(i = 0; i < 1000000; ++i) {
@@ -58,13 +66,7 @@ int main(int argc, char *argv[])
             exit(-1);
         }
         if(i % 5000 == 0)
-            printf("Test: %07l / %07l, (%0.2f%%)\n", i, 1000000, (float)i / 10000);
-        /*
-        str[len]='\0';
-        printf("Size: %d\n", len);
-        printf("Sent:\n%s\n", str);
-        usleep(100);
-        */
+            printf("Test: %07zd / %07d, (%0.2f%%)\n", i, 1000000, (double)(i) / 10000.0);
         free(str);
     }
     /* Finalize networking API */
