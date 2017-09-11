@@ -42,7 +42,7 @@ typedef SOCKET socket_t;
 typedef SSIZE_T ssize_t;
 #endif
 
-static char fde_network_last_error[1024];
+static char cpnet_last_error[1024];
 
 CPNET_NETWORK_API int net_init();
 CPNET_NETWORK_API int net_setsockopt(socket_t s, int option);

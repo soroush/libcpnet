@@ -243,7 +243,7 @@ CPNET_NETWORK_API int net_clean()
 CPNET_NETWORK_API
 const char *net_last_error()
 {
-    return fde_network_last_error;
+    return cpnet_last_error;
 }
 
 static void net_set_last_error()
@@ -255,7 +255,7 @@ static void net_set_last_error()
                   MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
                   (LPTSTR)fde_network_last_error, 0, NULL);
 #elif defined(__linux__)
-    strcpy(fde_network_last_error, strerror(errno));
+    strcpy(cpnet_last_error, strerror(errno));
 #endif
 }
 
