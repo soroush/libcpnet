@@ -29,6 +29,9 @@
 #endif // _WIN32
 #if defined(__linux__)
 #include <sys/socket.h>
+#include <arpa/inet.h>
+#include <netinet/in.h>
+#include <netinet/ip.h>
 #endif // __linux__
 
 #ifdef __cplusplus
@@ -54,9 +57,13 @@ CPNET_NETWORK_API socket_t net_accept(socket_t s, char *addr, uint16_t *port);
 CPNET_NETWORK_API ssize_t net_read(socket_t s, char *buffer, size_t len);
 CPNET_NETWORK_API ssize_t net_write(socket_t s, const char *buffer, size_t len);
 CPNET_NETWORK_API ssize_t net_read_packet(socket_t s, char *buffer, size_t len,
-                                        char *peer, uint16_t *port);
+        char *peer, uint16_t *port);
 CPNET_NETWORK_API ssize_t net_write_packet(socket_t s, char *buffer, size_t len,
-                                         const char* addrest, uint16_t port);
+        const char *addrest, uint16_t port);
+CPNET_NETWORK_API ssize_t net_write_packet_s(socket_t s, char *buffer, size_t len,
+        const struct sockaddr_in *cl_addr);
+CPNET_NETWORK_API struct sockaddr_in *net_inet_addr(const char *address,
+        uint16_t port);
 CPNET_NETWORK_API void net_close(socket_t s);
 CPNET_NETWORK_API int net_clean();
 CPNET_NETWORK_API const char *net_last_error();

@@ -30,4 +30,9 @@ void sleep_for(struct timespec *then, long nanoseconds);
 char *randstring(size_t length);
 char *randdata(size_t length);
 
+#define TEST_SIZE 100000
+#define EXPECTED_UDP_FAILURE 0.1
+#define TCP_PORT 50010
+#define UDP_PORT 50011
+
 #endif  // CPNET_NETWORK_TEST_COMMON_H

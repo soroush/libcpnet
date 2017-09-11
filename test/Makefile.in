@@ -104,7 +104,8 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
-check_PROGRAMS = client$(EXEEXT) server$(EXEEXT)
+check_PROGRAMS = tcp_client$(EXEEXT) tcp_server$(EXEEXT) \
+	udp_client$(EXEEXT) udp_server$(EXEEXT)
 subdir = test
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/libtool.m4 \
@@ -119,22 +120,29 @@ CONFIG_HEADER = $(top_builddir)/config.h
 CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
 LTLIBRARIES = $(noinst_LTLIBRARIES)
-libfde_test_network_common_la_LIBADD =
-am_libfde_test_network_common_la_OBJECTS = common.lo
-libfde_test_network_common_la_OBJECTS =  \
-	$(am_libfde_test_network_common_la_OBJECTS)
+libcpnet_test_la_LIBADD =
+am_libcpnet_test_la_OBJECTS = common.lo
+libcpnet_test_la_OBJECTS = $(am_libcpnet_test_la_OBJECTS)
 AM_V_lt = $(am__v_lt_@AM_V@)
 am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
 am__v_lt_0 = --silent
 am__v_lt_1 = 
-am_client_OBJECTS = client.$(OBJEXT)
-client_OBJECTS = $(am_client_OBJECTS)
-client_LDADD = $(LDADD)
-client_DEPENDENCIES = ../src/libcpnet.la libfde_test_network_common.la
-am_server_OBJECTS = server.$(OBJEXT)
-server_OBJECTS = $(am_server_OBJECTS)
-server_LDADD = $(LDADD)
-server_DEPENDENCIES = ../src/libcpnet.la libfde_test_network_common.la
+am_tcp_client_OBJECTS = tcp-client.$(OBJEXT)
+tcp_client_OBJECTS = $(am_tcp_client_OBJECTS)
+tcp_client_LDADD = $(LDADD)
+tcp_client_DEPENDENCIES = ../src/libcpnet.la libcpnet_test.la
+am_tcp_server_OBJECTS = tcp-server.$(OBJEXT)
+tcp_server_OBJECTS = $(am_tcp_server_OBJECTS)
+tcp_server_LDADD = $(LDADD)
+tcp_server_DEPENDENCIES = ../src/libcpnet.la libcpnet_test.la
+am_udp_client_OBJECTS = udp-client.$(OBJEXT)
+udp_client_OBJECTS = $(am_udp_client_OBJECTS)
+udp_client_LDADD = $(LDADD)
+udp_client_DEPENDENCIES = ../src/libcpnet.la libcpnet_test.la
+am_udp_server_OBJECTS = udp-server.$(OBJEXT)
+udp_server_OBJECTS = $(am_udp_server_OBJECTS)
+udp_server_LDADD = $(LDADD)
+udp_server_DEPENDENCIES = ../src/libcpnet.la libcpnet_test.la
 AM_V_P = $(am__v_P_@AM_V@)
 am__v_P_ = $(am__v_P_@AM_DEFAULT_V@)
 am__v_P_0 = false
@@ -169,10 +177,12 @@ AM_V_CCLD = $(am__v_CCLD_@AM_V@)
 am__v_CCLD_ = $(am__v_CCLD_@AM_DEFAULT_V@)
 am__v_CCLD_0 = @echo "  CCLD    " $@;
 am__v_CCLD_1 = 
-SOURCES = $(libfde_test_network_common_la_SOURCES) $(client_SOURCES) \
-	$(server_SOURCES)
-DIST_SOURCES = $(libfde_test_network_common_la_SOURCES) \
-	$(client_SOURCES) $(server_SOURCES)
+SOURCES = $(libcpnet_test_la_SOURCES) $(tcp_client_SOURCES) \
+	$(tcp_server_SOURCES) $(udp_client_SOURCES) \
+	$(udp_server_SOURCES)
+DIST_SOURCES = $(libcpnet_test_la_SOURCES) $(tcp_client_SOURCES) \
+	$(tcp_server_SOURCES) $(udp_client_SOURCES) \
+	$(udp_server_SOURCES)
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
@@ -526,20 +536,26 @@ ACLOCAL_AMFLAGS = ${ACLOCAL_FLAGS} -I m4
 AUTOMAKE_OPTIONS = subdir-objects
 AM_CPPFLAGS = -I$(srcdir)/..
 AM_CXXFLAGS = --pedantic -Wall -Werror
-noinst_LTLIBRARIES = libfde_test_network_common.la
-libfde_test_network_common_la_SOURCES = \
+noinst_LTLIBRARIES = libcpnet_test.la
+libcpnet_test_la_SOURCES = \
     common.c  \
     common.h
 
-client_SOURCES = \
-    client.c
+tcp_client_SOURCES = \
+    tcp-client.c
 
-server_SOURCES = \
-    server.c
+tcp_server_SOURCES = \
+    tcp-server.c
+
+udp_client_SOURCES = \
+    udp-client.c
+
+udp_server_SOURCES = \
+    udp-server.c
 
 LDADD = \
     ../src/libcpnet.la \
-    libfde_test_network_common.la
+    libcpnet_test.la
 
 TESTS = $(check_PROGRAMS)
 all: all-am
@@ -587,8 +603,8 @@ clean-noinstLTLIBRARIES:
 	  rm -f $${locs}; \
 	}
 
-libfde_test_network_common.la: $(libfde_test_network_common_la_OBJECTS) $(libfde_test_network_common_la_DEPENDENCIES) $(EXTRA_libfde_test_network_common_la_DEPENDENCIES) 
-	$(AM_V_CCLD)$(LINK)  $(libfde_test_network_common_la_OBJECTS) $(libfde_test_network_common_la_LIBADD) $(LIBS)
+libcpnet_test.la: $(libcpnet_test_la_OBJECTS) $(libcpnet_test_la_DEPENDENCIES) $(EXTRA_libcpnet_test_la_DEPENDENCIES) 
+	$(AM_V_CCLD)$(LINK)  $(libcpnet_test_la_OBJECTS) $(libcpnet_test_la_LIBADD) $(LIBS)
 
 clean-checkPROGRAMS:
 	@list='$(check_PROGRAMS)'; test -n "$$list" || exit 0; \
@@ -599,13 +615,21 @@ clean-checkPROGRAMS:
 	echo " rm -f" $$list; \
 	rm -f $$list
 
-client$(EXEEXT): $(client_OBJECTS) $(client_DEPENDENCIES) $(EXTRA_client_DEPENDENCIES) 
-	@rm -f client$(EXEEXT)
-	$(AM_V_CCLD)$(LINK) $(client_OBJECTS) $(client_LDADD) $(LIBS)
+tcp_client$(EXEEXT): $(tcp_client_OBJECTS) $(tcp_client_DEPENDENCIES) $(EXTRA_tcp_client_DEPENDENCIES) 
+	@rm -f tcp_client$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(tcp_client_OBJECTS) $(tcp_client_LDADD) $(LIBS)
 
-server$(EXEEXT): $(server_OBJECTS) $(server_DEPENDENCIES) $(EXTRA_server_DEPENDENCIES) 
-	@rm -f server$(EXEEXT)
-	$(AM_V_CCLD)$(LINK) $(server_OBJECTS) $(server_LDADD) $(LIBS)
+tcp_server$(EXEEXT): $(tcp_server_OBJECTS) $(tcp_server_DEPENDENCIES) $(EXTRA_tcp_server_DEPENDENCIES) 
+	@rm -f tcp_server$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(tcp_server_OBJECTS) $(tcp_server_LDADD) $(LIBS)
+
+udp_client$(EXEEXT): $(udp_client_OBJECTS) $(udp_client_DEPENDENCIES) $(EXTRA_udp_client_DEPENDENCIES) 
+	@rm -f udp_client$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(udp_client_OBJECTS) $(udp_client_LDADD) $(LIBS)
+
+udp_server$(EXEEXT): $(udp_server_OBJECTS) $(udp_server_DEPENDENCIES) $(EXTRA_udp_server_DEPENDENCIES) 
+	@rm -f udp_server$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(udp_server_OBJECTS) $(udp_server_LDADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
@@ -613,9 +637,11 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/client.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/common.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/server.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/tcp-client.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/tcp-server.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/udp-client.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/udp-server.Po@am__quote@
 
 .c.o:
 @am__fastdepCC_TRUE@	$(AM_V_CC)depbase=`echo $@ | sed 's|[^/]*$$|$(DEPDIR)/&|;s|\.o$$||'`;\
@@ -840,16 +866,30 @@ recheck: all $(check_PROGRAMS)
 	        am__force_recheck=am--force-recheck \
 	        TEST_LOGS="$$log_list"; \
 	exit $$?
-client.log: client$(EXEEXT)
-	@p='client$(EXEEXT)'; \
-	b='client'; \
+tcp_client.log: tcp_client$(EXEEXT)
+	@p='tcp_client$(EXEEXT)'; \
+	b='tcp_client'; \
 	$(am__check_pre) $(LOG_DRIVER) --test-name "$$f" \
 	--log-file $$b.log --trs-file $$b.trs \
 	$(am__common_driver_flags) $(AM_LOG_DRIVER_FLAGS) $(LOG_DRIVER_FLAGS) -- $(LOG_COMPILE) \
 	"$$tst" $(AM_TESTS_FD_REDIRECT)
-server.log: server$(EXEEXT)
-	@p='server$(EXEEXT)'; \
-	b='server'; \
+tcp_server.log: tcp_server$(EXEEXT)
+	@p='tcp_server$(EXEEXT)'; \
+	b='tcp_server'; \
+	$(am__check_pre) $(LOG_DRIVER) --test-name "$$f" \
+	--log-file $$b.log --trs-file $$b.trs \
+	$(am__common_driver_flags) $(AM_LOG_DRIVER_FLAGS) $(LOG_DRIVER_FLAGS) -- $(LOG_COMPILE) \
+	"$$tst" $(AM_TESTS_FD_REDIRECT)
+udp_client.log: udp_client$(EXEEXT)
+	@p='udp_client$(EXEEXT)'; \
+	b='udp_client'; \
+	$(am__check_pre) $(LOG_DRIVER) --test-name "$$f" \
+	--log-file $$b.log --trs-file $$b.trs \
+	$(am__common_driver_flags) $(AM_LOG_DRIVER_FLAGS) $(LOG_DRIVER_FLAGS) -- $(LOG_COMPILE) \
+	"$$tst" $(AM_TESTS_FD_REDIRECT)
+udp_server.log: udp_server$(EXEEXT)
+	@p='udp_server$(EXEEXT)'; \
+	b='udp_server'; \
 	$(am__check_pre) $(LOG_DRIVER) --test-name "$$f" \
 	--log-file $$b.log --trs-file $$b.trs \
 	$(am__common_driver_flags) $(AM_LOG_DRIVER_FLAGS) $(LOG_DRIVER_FLAGS) -- $(LOG_COMPILE) \

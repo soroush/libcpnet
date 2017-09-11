@@ -34,8 +34,8 @@ int main(int argc, char *argv[])
     /* Start a client */
     socket_t socket = net_socket(SOCK_STREAM);
     size_t tries = 5;
-    /* Connect to port 50001 */
-    while(net_connect(socket, "127.0.0.1", 50002) != 0 && tries) {
+    /* Connect to port TCP_PORT */
+    while(net_connect(socket, "127.0.0.1", TCP_PORT) != 0 && tries) {
         sleep(2);
         tries--;
         if(!tries){
@@ -45,28 +45,26 @@ int main(int argc, char *argv[])
     }
     /* Echo each message */
     size_t i = 0;
-    for(i = 0; i < 1000000; ++i) {
-        int len = (rand() % (1024 - 10)) + 10;
+    for(i = 0; i < TEST_SIZE; ++i) {
+        size_t len = (rand() % (1024 - 10)) + 10;
         /* char *str = randstring(len); */
         char *str = randdata(len);
         char buffer[1024];
         net_write(socket, str, len);
-        /*
-        printf("Iter: %d\n", i);
-        printf("Size: %d\n", len);
-        printf("WRITE\n");
-        */
-        int read_size = net_read(socket, buffer, 1024);
+        size_t read_size = net_read(socket, buffer, 1024);
         if(read_size != len) {
-            printf("Error: Expected to read %d bytes, though received %d bytes.\n", len, read_size);
+            printf("Error: Expected to read %zd bytes, "
+                   "though received %zd bytes.\n", len, read_size);
             exit(-1);
         }
         if(memcmp(str, buffer, len) != 0) {
             printf("Error: received data and sent data are not eaual.\n");
             exit(-1);
         }
-        if(i % 5000 == 0)
-            printf("Test: %07zd / %07d, (%0.2f%%)\n", i, 1000000, (double)(i) / 10000.0);
+        if(i % (TEST_SIZE/1000) == 0)
+            printf("Test: %07zd / %07d, (%0.2f%%)\n", i,
+                   TEST_SIZE, (double)(i*100) / TEST_SIZE);
+        printf("Iteration: %08zd - Size: %ld\n", i, read_size);
         free(str);
     }
     /* Finalize networking API */

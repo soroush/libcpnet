@@ -19,23 +19,31 @@ AUTOMAKE_OPTIONS = subdir-objects
 AM_CPPFLAGS = -I$(srcdir)/..
 AM_CXXFLAGS = --pedantic -Wall -Werror
 
-noinst_LTLIBRARIES = libfde_test_network_common.la
-libfde_test_network_common_la_SOURCES = \
+noinst_LTLIBRARIES = libcpnet_test.la
+libcpnet_test_la_SOURCES = \
     common.c  \
     common.h
 
 check_PROGRAMS = \
-    client \
-    server
+    tcp_client \
+    tcp_server \
+    udp_client \
+    udp_server
 
-client_SOURCES = \
-    client.c
+tcp_client_SOURCES = \
+    tcp-client.c
 
-server_SOURCES = \
-    server.c
+tcp_server_SOURCES = \
+    tcp-server.c
+
+udp_client_SOURCES = \
+    udp-client.c
+
+udp_server_SOURCES = \
+    udp-server.c
 
 LDADD = \
     ../src/libcpnet.la \
-    libfde_test_network_common.la
+    libcpnet_test.la
 
 TESTS = $(check_PROGRAMS)

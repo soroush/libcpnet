@@ -22,41 +22,36 @@
 #include <unistd.h>
 #endif /* __linux__ */
 #include "../src/cpnet-network.h"
+#include "common.h"
 
 int main(int argc, char *argv[])
 {
     /* Initialize networking API (if any needed) */
     net_init();
     /* Start a server */
-    socket_t socket = net_socket(SOCK_STREAM);
-    /* Bind on port 50002 */
-    uint16_t port = 50002;
+    socket_t socket = net_socket(SOCK_DGRAM);
+    /* Bind on port UCP_PORT */
+    uint16_t port = UDP_PORT;
     if(net_bind(socket, NULL, &port) != 0) {
         printf("System error description:\n%s\n", net_last_error());
         exit(-1);
     }
-    /* Listen for incomming connections */
-    net_listen(socket, 10);
-    /* Accept clients */
-    char address[46];
-    socket_t client = net_accept(socket, address, &port);
-    printf("Client connected. Remote Address:`%s' Assigned port number: %d\n", address, port);
     /* Echo each message */
-    while(1) {
+    size_t i;
+    for(i = 0; i < TEST_SIZE; ++i) {
         char buffer[1024];
-        ssize_t r = net_read(client, buffer, 1024);
+        char peer[46];
+        uint16_t pport = 0;
+        ssize_t r = net_read_packet(socket, buffer, 1024, peer, &pport);
         if(r < 0) {
-            //printf(strerror("Unable to read from socket!"));
+            printf("Unable to read from UDP socket!");
             exit(-1);
         }
         if(r == 0) {
             printf("Remote client stopped\n");
-            close(client);
             exit(0);
         }
-        net_write(client, buffer, r);
-        printf("Size: %ld\n", r);
-        //printf("Received:\n%s\n", buffer);
+        net_write_packet(socket, buffer, r, peer, pport);
     }
     exit(0);
 }

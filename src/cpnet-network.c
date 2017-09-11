@@ -17,8 +17,9 @@
  */
 
 #include "cpnet-network.h"
+#include <stdlib.h>
+#include <string.h>
 #if defined(__linux__)
-#include <arpa/inet.h>
 #include <netdb.h>
 #include <unistd.h>
 #include <error.h>
@@ -29,7 +30,6 @@
 #include <stdio.h>
 #include <io.h>
 #endif
-#include <string.h>
 
 #ifndef   NI_MAXHOST
 #define   NI_MAXHOST 1025
@@ -197,28 +197,46 @@ CPNET_NETWORK_API
 ssize_t net_write_packet(socket_t socketfd, char *buffer, size_t len,
                          const char *address, uint16_t port)
 {
-    ssize_t send_size = -1;
-    struct sockaddr_in cl_addr;
-    memset((void *)&cl_addr, '\0', sizeof(cl_addr));
-    cl_addr.sin_family = AF_INET;
-    if(!address) {
-        cl_addr.sin_addr.s_addr = htonl(INADDR_BROADCAST);
-    } else {
-        cl_addr.sin_addr.s_addr = inet_addr(address);
-    }
-    cl_addr.sin_port = htons(port);
+    ssize_t send_size;
+    struct sockaddr_in* cl_addr = net_inet_addr(address, port);
+    net_write_packet_s(socketfd, buffer, len, cl_addr);
+    free(cl_addr);
+    return send_size;
+}
+
+CPNET_NETWORK_API
+ssize_t net_write_packet_s(socket_t socketfd, char *buffer, size_t len,
+                           const struct sockaddr_in *dst)
+{
+    ssize_t send_size;
 #if defined (__linux__)
     send_size = sendto(socketfd, buffer, len, MSG_NOSIGNAL,
-                       (struct sockaddr *) &cl_addr, sizeof(cl_addr));
+                       (const struct sockaddr *) dst, sizeof(struct sockaddr_in));
 #elif defined(_WIN32)
-    send_size = sendto(socketfd, buffer, (int)len, 0,
-                       (struct sockaddr *) &cl_addr, sizeof(cl_addr));
+    send_size = sendto(socketfd, buffer, len, 0,
+                       (const struct sockaddr *) dst, sizeof(struct sockaddr_in));
 #endif
     if(send_size != len) {
         net_set_last_error();
     }
     return send_size;
 }
+
+CPNET_NETWORK_API
+struct sockaddr_in *net_inet_addr(const char *address, uint16_t port)
+{
+    struct sockaddr_in *cl_addr = (struct sockaddr_in *)(malloc(sizeof(struct sockaddr_in)));
+    memset((void *)cl_addr, '\0', sizeof(struct sockaddr_in));
+    cl_addr->sin_family = AF_INET;
+    if(!address) {
+        cl_addr->sin_addr.s_addr = htonl(INADDR_BROADCAST);
+    } else {
+        cl_addr->sin_addr.s_addr = inet_addr(address);
+    }
+    cl_addr->sin_port = htons(port);
+    return cl_addr;
+}
+
 
 CPNET_NETWORK_API
 ssize_t net_write(socket_t socketfd, const char *buffer, size_t len)
@@ -237,7 +255,7 @@ CPNET_NETWORK_API int net_clean()
 #ifdef _WIN32
     return WSACleanup();
 #else
-	return 0;
+    return 0;
 #endif /* _WIN32 */
 }
 
@@ -264,9 +282,9 @@ CPNET_NETWORK_API
 void net_close(socket_t socketfd)
 {
 #if defined(_WIN32)
-	closesocket(socketfd);
+    closesocket(socketfd);
 #elif defined(__linux__)
-	close(socketfd);
+    close(socketfd);
 #endif
 }
 
@@ -278,7 +296,7 @@ int net_setsockopt(socket_t s, int option)
     switch(option) {
     case SO_BROADCAST:
         ret = setsockopt(s, SOL_SOCKET, SO_BROADCAST,
-                         (const char*)(&dummy), sizeof(dummy));
+                         (const char *)(&dummy), sizeof(dummy));
         break;
     default:
         break;
