@@ -26,10 +26,18 @@
 #include "common.h"
 #include "../src/cpnet-network.h"
 
+#ifdef _WIN32
+DWORD WINAPI tst_udp_client(LPVOID param_arg)
+#else
 int main(int argc, char *argv[])
+#endif
 {
     /* Give time to server to bind (or else will be deadlock) */
-    sleep(2);
+#ifdef _WIN32
+	Sleep(2000);
+#else
+	sleep(2);
+#endif
     srand(time(NULL));
     /* Initialize networking API */
     net_init();
@@ -57,9 +65,11 @@ int main(int argc, char *argv[])
             free(str);
             continue;
         }
+#ifndef _WIN32
         if(i % (TEST_SIZE / 1000) == 0)
             printf("Test: %07zd / %07d, (%04.2f%%)\n", i,
                    TEST_SIZE, (double)(i * 100) / TEST_SIZE);
+#endif
         free(str);
     }
     /* Finalize networking API */
@@ -69,6 +79,6 @@ int main(int argc, char *argv[])
         printf("Failure rate (%04.2f%%) is bigger than expected (%04.2f%%)\n",
                fr, EXPECTED_UDP_FAILURE);
     }
-    exit(0);
+    return 0;
 }
 

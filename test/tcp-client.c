@@ -26,7 +26,11 @@
 #include "common.h"
 #include "../src/cpnet-network.h"
 
+#ifdef _WIN32
+DWORD WINAPI tst_tcp_client(LPVOID param_arg)
+#else
 int main(int argc, char *argv[])
+#endif
 {
     srand(time(NULL));
     /* Initialize networking API */
@@ -36,11 +40,15 @@ int main(int argc, char *argv[])
     size_t tries = 5;
     /* Connect to port TCP_PORT */
     while(net_connect(socket, "127.0.0.1", TCP_PORT) != 0 && tries) {
-        sleep(2);
+#ifdef _WIN32
+		Sleep(2000);
+#else
+		sleep(2);
+#endif
         tries--;
         if(!tries){
             printf("Unable to connect!\n");
-            exit(-1);
+            return -1;
         }
     }
     /* Echo each message */
@@ -55,20 +63,21 @@ int main(int argc, char *argv[])
         if(read_size != len) {
             printf("Error: Expected to read %zd bytes, "
                    "though received %zd bytes.\n", len, read_size);
-            exit(-1);
+            return -1;
         }
         if(memcmp(str, buffer, len) != 0) {
             printf("Error: received data and sent data are not eaual.\n");
-            exit(-1);
+            return -1;
         }
+#ifndef _WIN32
         if(i % (TEST_SIZE/1000) == 0)
             printf("Test: %07zd / %07d, (%0.2f%%)\n", i,
                    TEST_SIZE, (double)(i*100) / TEST_SIZE);
-        printf("Iteration: %08zd - Size: %ld\n", i, read_size);
+#endif
         free(str);
     }
     /* Finalize networking API */
     net_clean();
-    exit(0);
+    return 0;
 }
 

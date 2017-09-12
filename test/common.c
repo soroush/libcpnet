@@ -23,8 +23,8 @@
 #if defined(__linux__)
 #include <unistd.h>
 #elif defined(_WIN32)
+#include <Winsock2.h>    /* for timeval */
 #include <time.h>
-#include <Windows.h>
 #endif
 #include <stdlib.h>
 

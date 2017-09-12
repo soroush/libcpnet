@@ -68,6 +68,7 @@ CPNET_NETWORK_API void net_close(socket_t s);
 CPNET_NETWORK_API int net_clean();
 CPNET_NETWORK_API const char *net_last_error();
 
+
 #ifdef __cplusplus
 }
 #endif

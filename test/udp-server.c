@@ -24,7 +24,11 @@
 #include "../src/cpnet-network.h"
 #include "common.h"
 
+#ifdef _WIN32
+DWORD WINAPI tst_udp_server(LPVOID param_arg)
+#else
 int main(int argc, char *argv[])
+#endif
 {
     /* Initialize networking API (if any needed) */
     net_init();
@@ -34,7 +38,7 @@ int main(int argc, char *argv[])
     uint16_t port = UDP_PORT;
     if(net_bind(socket, NULL, &port) != 0) {
         printf("System error description:\n%s\n", net_last_error());
-        exit(-1);
+        return -1;
     }
     /* Echo each message */
     size_t i;
@@ -45,14 +49,14 @@ int main(int argc, char *argv[])
         ssize_t r = net_read_packet(socket, buffer, 1024, peer, &pport);
         if(r < 0) {
             printf("Unable to read from UDP socket!");
-            exit(-1);
+            return -1;
         }
         if(r == 0) {
             printf("Remote client stopped\n");
-            exit(0);
+            return 0;
         }
         net_write_packet(socket, buffer, r, peer, pport);
     }
-    exit(0);
+    return 0;
 }
 

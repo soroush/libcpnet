@@ -199,7 +199,7 @@ ssize_t net_write_packet(socket_t socketfd, char *buffer, size_t len,
 {
     ssize_t send_size;
     struct sockaddr_in* cl_addr = net_inet_addr(address, port);
-    net_write_packet_s(socketfd, buffer, len, cl_addr);
+    send_size = net_write_packet_s(socketfd, buffer, len, cl_addr);
     free(cl_addr);
     return send_size;
 }

@@ -19,6 +19,9 @@
 #ifndef CPNET_NETWORK_TEST_COMMON_H
 #define CPNET_NETWORK_TEST_COMMON_H
 
+#ifdef _WIN32
+#include "common-win.h"
+#endif
 #include <errno.h>
 #include <time.h>
 
@@ -32,7 +35,7 @@ char *randdata(size_t length);
 
 #define TEST_SIZE 100000
 #define EXPECTED_UDP_FAILURE 0.1
-#define TCP_PORT 50010
-#define UDP_PORT 50011
+#define TCP_PORT 50012
+#define UDP_PORT 50013
 
 #endif  // CPNET_NETWORK_TEST_COMMON_H

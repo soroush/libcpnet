@@ -16,19 +16,15 @@
  * along with libcpnet.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef CPNET_EXPORT_H
-#define CPNET_EXPORT_H
+#ifndef CPNET_NETWORK_TEST_COMMON_WIN_H
+#define CPNET_NETWORK_TEST_COMMON_WIN_H
 
-#ifdef _WIN32
-#ifdef CPNET_NETWORK_EXPORT
-#define CPNET_NETWORK_API __declspec(dllexport)
-#elif defined(CPNET_STATIC_LIBRARY)
-#define CPNET_NETWORK_API
-#else
-#define CPNET_NETWORK_API __declspec(dllimport)
-#endif
-#else
-#define CPNET_NETWORK_API
-#endif
+#define _WINSOCKAPI_  /* stops windows.h including winsock.h */
+#include <Windows.h>
 
-#endif
+DWORD WINAPI tst_tcp_client(LPVOID);
+DWORD WINAPI tst_tcp_server(LPVOID);
+DWORD WINAPI tst_udp_client(LPVOID);
+DWORD WINAPI tst_udp_server(LPVOID);
+
+#endif  // CPNET_NETWORK_TEST_COMMON_WIN_H

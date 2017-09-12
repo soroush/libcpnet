@@ -21,10 +21,14 @@
 #ifdef __linux__
 #include <unistd.h>
 #endif /* __linux__ */
-#include "../src/cpnet-network.h"
 #include "common.h"
+#include "../src/cpnet-network.h"
 
+#ifdef _WIN32
+DWORD WINAPI tst_tcp_server(LPVOID param_arg)
+#else
 int main(int argc, char *argv[])
+#endif
 {
     /* Initialize networking API (if any needed) */
     net_init();
@@ -34,7 +38,7 @@ int main(int argc, char *argv[])
     uint16_t port = TCP_PORT;
     if(net_bind(socket, NULL, &port) != 0) {
         printf("System error description:\n%s\n", net_last_error());
-        exit(-1);
+        return -1;
     }
     /* Listen for incomming connections */
     net_listen(socket, 10);
@@ -50,15 +54,14 @@ int main(int argc, char *argv[])
         ssize_t r = net_read(client, buffer, 1024);
         if(r < 0) {
             //printf(strerror("Unable to read from socket!"));
-            exit(-1);
+            return -1;
         }
         if(r == 0) {
             printf("Remote client stopped\n");
             exit(-1);
         }
         net_write(client, buffer, r);
-        printf("Iteration: %08zd - Size: %ld\n", i, r);
     }
-    exit(0);
+    return 0;
 }
 
