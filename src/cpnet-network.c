@@ -104,7 +104,7 @@ static inline int setsockopt_int_helper(socket_t s, int option, int value)
          * int which is number of milliseconds to wait, linux expects a struct
          * of timeval type. This function expects microseconds.
          */
-#if defined(_WIN32) && defined(_MSCVER)
+#if defined(_WIN32) && defined(_MSC_VER)
         DWORD sock_timeout = value / 1000;
 #else
         const struct timeval sock_timeout;
