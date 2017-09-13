@@ -75,7 +75,7 @@ int clock_gettime(int X, struct timeval *tv)
 {
     LARGE_INTEGER t;
     FILETIME f;
-    double microseconds;
+    long long microseconds;
     static LARGE_INTEGER offset;
     static double frequencyToMicroseconds;
     static int initialized = 0;
@@ -102,7 +102,7 @@ int clock_gettime(int X, struct timeval *tv)
     }
 
     t.QuadPart -= offset.QuadPart;
-    microseconds = (double)t.QuadPart / frequencyToMicroseconds;
+    microseconds = t.QuadPart / (long long)(frequencyToMicroseconds);
     t.QuadPart = microseconds;
     tv->tv_sec = t.QuadPart / 1000000;
     tv->tv_usec = t.QuadPart % 1000000;
@@ -142,8 +142,6 @@ static inline void get_hex(char *buf, int buf_len, char *hex_, int hex_len, int 
 
 long nanodiff(struct timespec *a, struct timespec *b)
 {
-    //printf(" A: %010ld %010ld\n", a->tv_sec, a->tv_nsec);
-    //printf(" B: %010ld %010ld\n", then->tv_sec, then->tv_nsec);
     long sdiff = (a->tv_sec - b->tv_sec) * 1.0E+09;
     return sdiff + (a->tv_nsec - b->tv_nsec);
 }

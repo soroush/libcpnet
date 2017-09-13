@@ -38,7 +38,7 @@ int main(int argc, char *argv[])
 #else
 	sleep(2);
 #endif
-    srand(time(NULL));
+    srand((unsigned int)time(NULL));
     /* Initialize networking API */
     net_init();
     /* Start a client */
@@ -52,9 +52,9 @@ int main(int argc, char *argv[])
         char *str = randdata(len);
         char buffer[1024];
         net_write_packet(socket, str, len, "127.0.0.1", UDP_PORT);
-        int read_size = net_read_packet(socket, buffer, 1024, NULL, NULL);
+        ssize_t read_size = net_read_packet(socket, buffer, 1024, NULL, NULL);
         if(read_size != len) {
-            printf("Error: Expected to read %d bytes, though received %d bytes.\n", len, read_size);
+            printf("Error: Expected to read %d bytes, though received %lld bytes.\n", len, read_size);
             fails++;
             free(str);
             continue;

@@ -78,7 +78,16 @@ static inline int setsockopt_int_helper(socket_t s, int option, int value)
     case SO_KEEPALIVE:
     case SO_OOBINLINE:
     case SO_REUSEADDR:
+#ifndef _WIN32
+        /*Windows only knows the SO_REUSEADDR option, there is no SO_REUSEPORT. 
+         * Setting SO_REUSEADDR on a socket in Windows behaves like setting 
+         * SO_REUSEPORT and SO_REUSEADDR on a socket in BSD, with one 
+         * exception: A socket with SO_REUSEADDR can always bind to exactly the
+         * same source address and port as an already bound socket, even if the
+         * other socket did not have this option set when it was bound.
+         */
     case SO_REUSEPORT:
+#endif
     case SO_SNDBUF:
     case SO_RCVBUF:
     case SO_SNDLOWAT:
@@ -268,7 +277,7 @@ ssize_t net_write_packet_s(socket_t socketfd, char *buffer, size_t len,
     send_size = sendto(socketfd, buffer, len, MSG_NOSIGNAL,
                        (const struct sockaddr *) dst, sizeof(struct sockaddr_in));
 #elif defined(_WIN32)
-    send_size = sendto(socketfd, buffer, len, 0,
+    send_size = sendto(socketfd, buffer, (int)len, 0,
                        (const struct sockaddr *) dst, sizeof(struct sockaddr_in));
 #endif
     if(send_size != len) {

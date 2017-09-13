@@ -32,7 +32,7 @@ DWORD WINAPI tst_tcp_client(LPVOID param_arg)
 int main(int argc, char *argv[])
 #endif
 {
-    srand(time(NULL));
+    srand((unsigned int)time(NULL));
     /* Initialize networking API */
     net_init();
     /* Start a client */
