@@ -79,27 +79,42 @@ static inline int setsockopt_int_helper(socket_t s, int option, int value)
     case SO_OOBINLINE:
     case SO_REUSEADDR:
 #ifndef _WIN32
-        /*Windows only knows the SO_REUSEADDR option, there is no SO_REUSEPORT. 
-         * Setting SO_REUSEADDR on a socket in Windows behaves like setting 
-         * SO_REUSEPORT and SO_REUSEADDR on a socket in BSD, with one 
-         * exception: A socket with SO_REUSEADDR can always bind to exactly the
-         * same source address and port as an already bound socket, even if the
-         * other socket did not have this option set when it was bound.
-         */
+    /* Windows only knows the SO_REUSEADDR option, there is no SO_REUSEPORT.
+     * Setting SO_REUSEADDR on a socket in Windows behaves like setting
+     * SO_REUSEPORT and SO_REUSEADDR on a socket in BSD, with one
+     * exception: A socket with SO_REUSEADDR can always bind to exactly the
+     * same source address and port as an already bound socket, even if the
+     * other socket did not have this option set when it was bound.
+     */
     case SO_REUSEPORT:
 #endif
     case SO_SNDBUF:
     case SO_RCVBUF:
     case SO_SNDLOWAT:
     case SO_RCVLOWAT:
-    case SO_SNDTIMEO:
-    case SO_RCVTIMEO:
 #ifdef SO_USELOOPBACK
     case SO_USELOOPBACK:
 #endif
         return setsockopt(s, SOL_SOCKET, option,
                           (const void *)(&value), sizeof(value));
         break;
+    case SO_SNDTIMEO:
+    case SO_RCVTIMEO: {
+        /* Windows and Linux timeout values are different. Windows expects an
+         * int which is number of milliseconds to wait, linux expects a struct
+         * of timeval type. This function expects microseconds.
+         */
+#if defined(_WIN32) && defined(_MSCVER)
+        DWORD sock_timeout = value / 1000;
+#else
+        const struct timeval sock_timeout;
+        sock_timeout.tv_sec = value / 1000000;
+        sock_timeout.tv_usec = value % 1000000;
+#endif
+        return setsockopt(s, SOL_SOCKET, option,
+                          (const void *)(&sock_timeout), sizeof(sock_timeout));
+    }
+    break;
     default:
         return -1;
         break;
