@@ -126,6 +126,18 @@ static inline int setsockopt_int_helper(socket_t s, int option, int value)
     }
 }
 
+/**
+  * Supported options are:
+  * * SO_BROADCAST
+  * * SO_DEBUG
+  * * SO_DONTROUTE
+  * * SO_KEEPALIVE
+  * * SO_OOBINLINE
+  * * SO_REUSEADDR
+  *
+  * NOTE: calling this function with other types of options, will cause a logical
+  * error and will behave differently on different platforms.
+  */
 CPNET_NETWORK_API
 int net_setopt(socket_t s, int option)
 {
@@ -135,6 +147,18 @@ int net_setopt(socket_t s, int option)
     return ret;
 }
 
+/**
+  * Supported options are:
+  * * SO_BROADCAST
+  * * SO_DEBUG
+  * * SO_DONTROUTE
+  * * SO_KEEPALIVE
+  * * SO_OOBINLINE
+  * * SO_REUSEADDR
+  *
+  * NOTE: calling this function with other types of options, will cause a logical
+  * error and will behave differently on different platforms.
+  */
 CPNET_NETWORK_API
 int net_unsetopt(socket_t s, int option)
 {

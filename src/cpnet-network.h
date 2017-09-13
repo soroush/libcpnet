@@ -51,7 +51,16 @@ static char cpnet_last_error[1024];
  * \brief Initialize networking interface.
  */
 CPNET_NETWORK_API int net_init();
+
+/**
+ * \brief Sets option on socket. Only options that could be treated as boolean
+ * can be set by this function. For other usages see \ref net_setval .
+ */
 CPNET_NETWORK_API int net_setopt(socket_t s, int option);
+/**
+ * \brief Unsets option on socket. Only options that could be treated as boolean
+ * can be set by this function. For other usages see \ref net_setval .
+ */
 CPNET_NETWORK_API int net_unsetopt(socket_t s, int option);
 CPNET_NETWORK_API int net_setval(socket_t s, int option, int val);
 CPNET_NETWORK_API socket_t net_socket(int type);
