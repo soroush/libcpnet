@@ -69,6 +69,61 @@ int net_init()
 #endif
 }
 
+static inline int setsockopt_int_helper(socket_t s, int option, int value)
+{
+    switch(option) {
+    case SO_BROADCAST:
+    case SO_DEBUG:
+    case SO_DONTROUTE:
+    case SO_KEEPALIVE:
+    case SO_OOBINLINE:
+    case SO_REUSEADDR:
+    case SO_REUSEPORT:
+    case SO_SNDBUF:
+    case SO_RCVBUF:
+    case SO_SNDLOWAT:
+    case SO_RCVLOWAT:
+    case SO_SNDTIMEO:
+    case SO_RCVTIMEO:
+#ifdef SO_USELOOPBACK
+    case SO_USELOOPBACK:
+#endif
+        return setsockopt(s, SOL_SOCKET, option,
+                          (const void *)(&value), sizeof(value));
+        break;
+    default:
+        return -1;
+        break;
+    }
+}
+
+CPNET_NETWORK_API
+int net_setopt(socket_t s, int option)
+{
+    int ret = setsockopt_int_helper(s, option, 1);
+    if(ret != 0)
+        net_set_last_error();
+    return ret;
+}
+
+CPNET_NETWORK_API
+int net_unsetopt(socket_t s, int option)
+{
+    int ret = setsockopt_int_helper(s, option, 0);
+    if(ret != 0)
+        net_set_last_error();
+    return ret;
+}
+
+CPNET_NETWORK_API
+int net_setval(socket_t s, int option, int val)
+{
+    int ret = setsockopt_int_helper(s, option, val);
+    if(ret != 0)
+        net_set_last_error();
+    return ret;
+}
+
 CPNET_NETWORK_API
 socket_t net_socket(int type)
 {
@@ -198,7 +253,7 @@ ssize_t net_write_packet(socket_t socketfd, char *buffer, size_t len,
                          const char *address, uint16_t port)
 {
     ssize_t send_size;
-    struct sockaddr_in* cl_addr = net_inet_addr(address, port);
+    struct sockaddr_in *cl_addr = net_inet_addr(address, port);
     send_size = net_write_packet_s(socketfd, buffer, len, cl_addr);
     free(cl_addr);
     return send_size;
@@ -288,20 +343,3 @@ void net_close(socket_t socketfd)
 #endif
 }
 
-
-int net_setsockopt(socket_t s, int option)
-{
-    int ret = 0;
-    int dummy = 1;
-    switch(option) {
-    case SO_BROADCAST:
-        ret = setsockopt(s, SOL_SOCKET, SO_BROADCAST,
-                         (const char *)(&dummy), sizeof(dummy));
-        break;
-    default:
-        break;
-    }
-    if(ret != 0)
-        net_set_last_error();
-    return ret;
-}

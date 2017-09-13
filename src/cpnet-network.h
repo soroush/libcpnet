@@ -48,7 +48,9 @@ typedef SSIZE_T ssize_t;
 static char cpnet_last_error[1024];
 
 CPNET_NETWORK_API int net_init();
-CPNET_NETWORK_API int net_setsockopt(socket_t s, int option);
+CPNET_NETWORK_API int net_setopt(socket_t s, int option);
+CPNET_NETWORK_API int net_unsetopt(socket_t s, int option);
+CPNET_NETWORK_API int net_setval(socket_t s, int option, int val);
 CPNET_NETWORK_API socket_t net_socket(int type);
 CPNET_NETWORK_API int net_bind(socket_t s, const char *address, uint16_t *port);
 CPNET_NETWORK_API int net_connect(socket_t s, const char *address, uint16_t port);
