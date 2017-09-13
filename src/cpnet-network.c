@@ -37,6 +37,12 @@
 
 static void net_set_last_error();
 
+/**
+  * Calling this function on POSIX platforms (or wherever BSD sockets are
+  * supported) has no effect. On Windows platforms, this function initializes
+  * Winsock API by calling \ref WSAStartup.
+  */
+
 CPNET_NETWORK_API
 int net_init()
 {

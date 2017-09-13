@@ -47,6 +47,9 @@ typedef SSIZE_T ssize_t;
 
 static char cpnet_last_error[1024];
 
+/**
+ * \brief Initialize networking interface.
+ */
 CPNET_NETWORK_API int net_init();
 CPNET_NETWORK_API int net_setopt(socket_t s, int option);
 CPNET_NETWORK_API int net_unsetopt(socket_t s, int option);
