@@ -144,8 +144,10 @@ Functions</h2></td></tr>
 <tr class="memdesc:a6f6b7eb32735035f845c0c92b0c65973"><td class="mdescLeft">&#160;</td><td class="mdescRight">Unsets option on socket. Only options that could be treated as boolean can be set by this function. For other usages see <a class="el" href="cpnet-network_8h.html#ac3233d225486af04c4309f467591691b">net_setval</a> .  <a href="#a6f6b7eb32735035f845c0c92b0c65973">More...</a><br /></td></tr>
 <tr class="separator:a6f6b7eb32735035f845c0c92b0c65973"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac3233d225486af04c4309f467591691b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cpnet-export_8h.html#ad9a6d2461b391a40675cb44d10acdd28">CPNET_NETWORK_API</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cpnet-network_8h.html#ac3233d225486af04c4309f467591691b">net_setval</a> (socket_t s, int option, int val)</td></tr>
+<tr class="memdesc:ac3233d225486af04c4309f467591691b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets options with numeral values on sockest. Only options with arguments of integer semantics should be set by this function. For setting and unsetting boolean options please refere to <a class="el" href="cpnet-network_8h.html#a9b0a594a7c02d9c1f59061e59df8e21d">net_setopt</a> and <a class="el" href="cpnet-network_8h.html#a6f6b7eb32735035f845c0c92b0c65973">net_unsetopt</a> .  <a href="#ac3233d225486af04c4309f467591691b">More...</a><br /></td></tr>
 <tr class="separator:ac3233d225486af04c4309f467591691b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa5aa2b4e2c6d39f85e6e1ddff810c3d6"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cpnet-export_8h.html#ad9a6d2461b391a40675cb44d10acdd28">CPNET_NETWORK_API</a> socket_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cpnet-network_8h.html#aa5aa2b4e2c6d39f85e6e1ddff810c3d6">net_socket</a> (int type)</td></tr>
+<tr class="memdesc:aa5aa2b4e2c6d39f85e6e1ddff810c3d6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a socket instance.  <a href="#aa5aa2b4e2c6d39f85e6e1ddff810c3d6">More...</a><br /></td></tr>
 <tr class="separator:aa5aa2b4e2c6d39f85e6e1ddff810c3d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a64e152585f9dc3ffaf41980c07a2f6ee"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cpnet-export_8h.html#ad9a6d2461b391a40675cb44d10acdd28">CPNET_NETWORK_API</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cpnet-network_8h.html#a64e152585f9dc3ffaf41980c07a2f6ee">net_bind</a> (socket_t s, const char *address, uint16_t *port)</td></tr>
 <tr class="separator:a64e152585f9dc3ffaf41980c07a2f6ee"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -530,6 +532,8 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Sets options with numeral values on sockest. Only options with arguments of integer semantics should be set by this function. For setting and unsetting boolean options please refere to <a class="el" href="cpnet-network_8h.html#a9b0a594a7c02d9c1f59061e59df8e21d">net_setopt</a> and <a class="el" href="cpnet-network_8h.html#a6f6b7eb32735035f845c0c92b0c65973">net_unsetopt</a> . </p>
+
 </div>
 </div>
 <a class="anchor" id="aa5aa2b4e2c6d39f85e6e1ddff810c3d6"></a>
@@ -545,6 +549,10 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Creates a socket instance. </p>
+<p>Actual returning type will be same as underlying * native socket type. On Linux platforms, an integer value (file descriptor) will be returned.</p>
+<p>Currently only SOCK_STREAM and SOCK_DGRAM types are supported. </p>
 
 </div>
 </div>
