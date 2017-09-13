@@ -107,9 +107,8 @@ static inline int setsockopt_int_helper(socket_t s, int option, int value)
 #if defined(_WIN32) && defined(_MSCVER)
         DWORD sock_timeout = value / 1000;
 #else
-        const struct timeval sock_timeout;
-        sock_timeout.tv_sec = value / 1000000;
-        sock_timeout.tv_usec = value % 1000000;
+        const struct timeval sock_timeout = {.tv_sec = value / 1000000,
+                                             .tv_usec = value % 1000000};
 #endif
         return setsockopt(s, SOL_SOCKET, option,
                           (const void *)(&sock_timeout), sizeof(sock_timeout));
