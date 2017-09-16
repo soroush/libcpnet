@@ -114,7 +114,8 @@ static inline int setsockopt_int_helper(socket_t s, int option, int value)
         DWORD sock_timeout = value / 1000;
 #else
         const struct timeval sock_timeout = {.tv_sec = value / 1000000,
-                                             .tv_usec = value % 1000000};
+                  .tv_usec = value % 1000000
+        };
 #endif
         return setsockopt(s, SOL_SOCKET, option,
                           (const void *)(&sock_timeout), sizeof(sock_timeout));
@@ -137,6 +138,13 @@ static inline int setsockopt_int_helper(socket_t s, int option, int value)
   *
   * NOTE: calling this function with other types of options, will cause a logical
   * error and will behave differently on different platforms.
+  *
+  * NOTE: Windows only knows the SO_REUSEADDR option, there is no SO_REUSEPORT.
+  * Setting SO_REUSEADDR on a socket in Windows behaves like setting
+  * SO_REUSEPORT and SO_REUSEADDR on a socket in BSD, with one
+  * exception: A socket with SO_REUSEADDR can always bind to exactly the
+  * same source address and port as an already bound socket, even if the
+  * other socket did not have this option set when it was bound.
   */
 CPNET_NETWORK_API
 int net_setopt(socket_t s, int option)
@@ -177,6 +185,12 @@ int net_setval(socket_t s, int option, int val)
     return ret;
 }
 
+/**
+ * Actual returning type will be same as underlying native socket type. On Linux
+ * and *nix-like platforms, an integer value (file descriptor) will be returned.
+ *
+ * Currently only SOCK_STREAM and SOCK_DGRAM types are supported.
+ */
 CPNET_NETWORK_API
 socket_t net_socket(int type)
 {
@@ -298,6 +312,20 @@ ssize_t net_read_packet(socket_t socketfd, char *buffer,
     if(peer_port) {
         *peer_port = ntohs(peer_addr->sin_port);
     }
+    return recv_size;
+}
+
+CPNET_NETWORK_API
+ssize_t net_read_packet_s(socket_t socketfd, char *buffer, size_t len,
+                          struct sockaddr *peer)
+{
+    ssize_t recv_size = 0;
+    socklen_t peer_len = sizeof(struct sockaddr);
+#if defined (__linux__)
+    recv_size = recvfrom(socketfd, buffer, len, MSG_NOSIGNAL, peer, &peer_len);
+#elif defined(_WIN32)
+    recv_size = (ssize_t)recvfrom(socketfd, buffer, (int)len, 0, peer, &peer_len);
+#endif
     return recv_size;
 }
 

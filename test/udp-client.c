@@ -54,7 +54,11 @@ int main(int argc, char *argv[])
         net_write_packet(socket, str, len, "127.0.0.1", UDP_PORT);
         ssize_t read_size = net_read_packet(socket, buffer, 1024, NULL, NULL);
         if(read_size != len) {
+#ifdef _WIN32
             printf("Error: Expected to read %d bytes, though received %lld bytes.\n", len, read_size);
+#else
+            printf("Error: Expected to read %d bytes, though received %ld bytes.\n", len, read_size);
+#endif
             fails++;
             free(str);
             continue;

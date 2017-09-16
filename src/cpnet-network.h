@@ -57,13 +57,29 @@ CPNET_NETWORK_API int net_init();
  * can be set by this function. For other usages see \ref net_setval .
  */
 CPNET_NETWORK_API int net_setopt(socket_t s, int option);
+
 /**
  * \brief Unsets option on socket. Only options that could be treated as boolean
  * can be set by this function. For other usages see \ref net_setval .
  */
 CPNET_NETWORK_API int net_unsetopt(socket_t s, int option);
+
+/**
+ * \brief Sets options with numeral values on sockest. Only options with
+ * arguments of integer semantics should be set by this function. For setting
+ * and unsetting boolean options please refere to \ref net_setopt and
+ * \ref net_unsetopt .
+ */
 CPNET_NETWORK_API int net_setval(socket_t s, int option, int val);
+
+/**
+ * \brief Creates a socket instance.
+ */
 CPNET_NETWORK_API socket_t net_socket(int type);
+
+/**
+  * \brief Binds a socket on specified address and port.
+*/
 CPNET_NETWORK_API int net_bind(socket_t s, const char *address, uint16_t *port);
 CPNET_NETWORK_API int net_connect(socket_t s, const char *address, uint16_t port);
 CPNET_NETWORK_API int net_listen(socket_t s, int backlog);
@@ -72,6 +88,8 @@ CPNET_NETWORK_API ssize_t net_read(socket_t s, char *buffer, size_t len);
 CPNET_NETWORK_API ssize_t net_write(socket_t s, const char *buffer, size_t len);
 CPNET_NETWORK_API ssize_t net_read_packet(socket_t s, char *buffer, size_t len,
         char *peer, uint16_t *port);
+CPNET_NETWORK_API ssize_t net_read_packet_s(socket_t s, char *buffer, size_t len,
+        struct sockaddr *cl_addr);
 CPNET_NETWORK_API ssize_t net_write_packet(socket_t s, char *buffer, size_t len,
         const char *addrest, uint16_t port);
 CPNET_NETWORK_API ssize_t net_write_packet_s(socket_t s, char *buffer, size_t len,
