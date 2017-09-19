@@ -78,10 +78,20 @@ CPNET_NETWORK_API int net_setval(socket_t s, int option, int val);
 CPNET_NETWORK_API socket_t net_socket(int type);
 
 /**
-  * \brief Binds a socket on specified address and port.
-*/
+ * \brief Binds a socket on specified address and port.
+ */
 CPNET_NETWORK_API int net_bind(socket_t s, const char *address, uint16_t *port);
+
+/**
+ * \brief Connects the socket referred to by the file descriptor, to the address
+ * specified by IPv4 address and port number
+ */
 CPNET_NETWORK_API int net_connect(socket_t s, const char *address, uint16_t port);
+
+/**
+ * \brief Marks  the  socket  as a passive socket, that is, as a socket that
+ * will be used to accept incoming connection requests.
+ */
 CPNET_NETWORK_API int net_listen(socket_t s, int backlog);
 CPNET_NETWORK_API socket_t net_accept(socket_t s, char *addr, uint16_t *port);
 CPNET_NETWORK_API ssize_t net_read(socket_t s, char *buffer, size_t len);
