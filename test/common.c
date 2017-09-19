@@ -104,7 +104,7 @@ int clock_gettime(int X, struct timeval *tv)
     t.QuadPart -= offset.QuadPart;
     microseconds = t.QuadPart / (long long)(frequencyToMicroseconds);
     t.QuadPart = microseconds;
-    tv->tv_sec = t.QuadPart / 1000000;
+    tv->tv_sec = (long)(t.QuadPart / 1000000);
     tv->tv_usec = t.QuadPart % 1000000;
     return (0);
 }
@@ -142,14 +142,14 @@ static inline void get_hex(char *buf, int buf_len, char *hex_, int hex_len, int 
 
 long nanodiff(struct timespec *a, struct timespec *b)
 {
-    long sdiff = (a->tv_sec - b->tv_sec) * 1.0E+09;
+    long sdiff = (long)((a->tv_sec - b->tv_sec) * 1.0E+09);
     return sdiff + (a->tv_nsec - b->tv_nsec);
 }
 
 void sleep_for(struct timespec *then, long sleep_value)
 {
     struct timespec now;
-    if(clock_gettime(CLOCK_REALTIME, &now) == -1) {
+    if(clock_gettime(CLOCK_REALTIME, (struct timeval*)(&now)) == -1) {
         fprintf(stderr, "Unable to get system clock\n%s\n", strerror(errno));
         exit(99);
     }
