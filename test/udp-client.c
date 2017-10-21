@@ -40,9 +40,9 @@ int main(int argc, char *argv[])
 #endif
     srand((unsigned int)time(NULL));
     /* Initialize networking API */
-    net_init();
+    cpnet_init();
     /* Start a client */
-    socket_t socket = net_socket(SOCK_DGRAM);
+    socket_t socket = cpnet_socket(SOCK_DGRAM);
     /* Echo each message */
     size_t i = 0;
     size_t fails = 0;
@@ -51,8 +51,8 @@ int main(int argc, char *argv[])
         /* char *str = randstring(len); */
         char *str = randdata(len);
         char buffer[1024];
-        net_write_packet(socket, str, len, "127.0.0.1", UDP_PORT);
-        ssize_t read_size = net_read_packet(socket, buffer, 1024, NULL, NULL);
+        cpnet_write_packet(socket, str, len, "127.0.0.1", UDP_PORT);
+        ssize_t read_size = cpnet_read_packet(socket, buffer, 1024, NULL, NULL);
         if(read_size != len) {
 #ifdef _WIN32
             printf("Error: Expected to read %d bytes, though received %lld bytes.\n", len, read_size);
@@ -77,7 +77,7 @@ int main(int argc, char *argv[])
         free(str);
     }
     /* Finalize networking API */
-    net_clean();
+    cpnet_clean();
     double fr = (double)(fails) / TEST_SIZE;
     if(fr > EXPECTED_UDP_FAILURE) {
         printf("Failure rate (%04.2f%%) is bigger than expected (%04.2f%%)\n",

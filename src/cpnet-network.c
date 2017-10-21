@@ -44,7 +44,7 @@ static void net_set_last_error();
   */
 
 CPNET_NETWORK_API
-int net_init()
+int cpnet_init()
 {
 #ifdef _WIN32
     WORD requested_version;
@@ -147,7 +147,7 @@ static inline int setsockopt_int_helper(socket_t s, int option, int value)
   * other socket did not have this option set when it was bound.
   */
 CPNET_NETWORK_API
-int net_setopt(socket_t s, int option)
+int cpnet_setopt(socket_t s, int option)
 {
     int ret = setsockopt_int_helper(s, option, 1);
     if(ret != 0)
@@ -168,7 +168,7 @@ int net_setopt(socket_t s, int option)
   * error and will behave differently on different platforms.
   */
 CPNET_NETWORK_API
-int net_unsetopt(socket_t s, int option)
+int cpnet_unsetopt(socket_t s, int option)
 {
     int ret = setsockopt_int_helper(s, option, 0);
     if(ret != 0)
@@ -177,7 +177,7 @@ int net_unsetopt(socket_t s, int option)
 }
 
 CPNET_NETWORK_API
-int net_setval(socket_t s, int option, int val)
+int cpnet_setval(socket_t s, int option, int val)
 {
     int ret = setsockopt_int_helper(s, option, val);
     if(ret != 0)
@@ -192,13 +192,13 @@ int net_setval(socket_t s, int option, int val)
  * Currently only SOCK_STREAM and SOCK_DGRAM types are supported.
  */
 CPNET_NETWORK_API
-socket_t net_socket(int type)
+socket_t cpnet_socket(int type)
 {
     return socket(AF_INET, type, 0);
 }
 
 CPNET_NETWORK_API
-int net_bind(socket_t sockfd, const char *address, uint16_t *portno)
+int cpnet_bind(socket_t sockfd, const char *address, uint16_t *portno)
 {
     if(!sockfd)
         return -1;
@@ -235,7 +235,7 @@ int net_bind(socket_t sockfd, const char *address, uint16_t *portno)
 }
 
 CPNET_NETWORK_API
-int net_connect(socket_t sockfd, const char *address, uint16_t portno)
+int cpnet_connect(socket_t sockfd, const char *address, uint16_t portno)
 {
     struct sockaddr_in serv_addr;
     struct hostent *server;
@@ -251,13 +251,13 @@ int net_connect(socket_t sockfd, const char *address, uint16_t portno)
 }
 
 CPNET_NETWORK_API
-int net_listen(socket_t socketfd, int backlog)
+int cpnet_listen(socket_t socketfd, int backlog)
 {
     return listen(socketfd, backlog);
 }
 
 CPNET_NETWORK_API
-socket_t net_accept(socket_t socketfd, char *addr, uint16_t *port)
+socket_t cpnet_accept(socket_t socketfd, char *addr, uint16_t *port)
 {
     struct sockaddr_in cli_addr;
     socklen_t clilen = sizeof(cli_addr);
@@ -277,7 +277,7 @@ socket_t net_accept(socket_t socketfd, char *addr, uint16_t *port)
 }
 
 CPNET_NETWORK_API
-ssize_t net_read(socket_t socketfd, char *buffer, size_t len)
+ssize_t cpnet_read(socket_t socketfd, char *buffer, size_t len)
 {
 #if defined (__linux__)
     ssize_t retval = recv(socketfd, buffer, len, MSG_NOSIGNAL);
@@ -291,7 +291,7 @@ ssize_t net_read(socket_t socketfd, char *buffer, size_t len)
 
 
 CPNET_NETWORK_API
-ssize_t net_read_packet(socket_t socketfd, char *buffer,
+ssize_t cpnet_read_packet(socket_t socketfd, char *buffer,
                         size_t len, char *peer_address, uint16_t *peer_port)
 {
     ssize_t recv_size = 0;
@@ -316,7 +316,7 @@ ssize_t net_read_packet(socket_t socketfd, char *buffer,
 }
 
 CPNET_NETWORK_API
-ssize_t net_read_packet_s(socket_t socketfd, char *buffer, size_t len,
+ssize_t cpnet_read_packet_s(socket_t socketfd, char *buffer, size_t len,
                           struct sockaddr *peer)
 {
     ssize_t recv_size = 0;
@@ -330,18 +330,18 @@ ssize_t net_read_packet_s(socket_t socketfd, char *buffer, size_t len,
 }
 
 CPNET_NETWORK_API
-ssize_t net_write_packet(socket_t socketfd, char *buffer, size_t len,
+ssize_t cpnet_write_packet(socket_t socketfd, char *buffer, size_t len,
                          const char *address, uint16_t port)
 {
     ssize_t send_size;
-    struct sockaddr_in *cl_addr = net_inet_addr(address, port);
-    send_size = net_write_packet_s(socketfd, buffer, len, cl_addr);
+    struct sockaddr_in *cl_addr = cpnet_inet_addr(address, port);
+    send_size = cpnet_write_packet_s(socketfd, buffer, len, cl_addr);
     free(cl_addr);
     return send_size;
 }
 
 CPNET_NETWORK_API
-ssize_t net_write_packet_s(socket_t socketfd, char *buffer, size_t len,
+ssize_t cpnet_write_packet_s(socket_t socketfd, char *buffer, size_t len,
                            const struct sockaddr_in *dst)
 {
     ssize_t send_size;
@@ -359,7 +359,7 @@ ssize_t net_write_packet_s(socket_t socketfd, char *buffer, size_t len,
 }
 
 CPNET_NETWORK_API
-struct sockaddr_in *net_inet_addr(const char *address, uint16_t port)
+struct sockaddr_in *cpnet_inet_addr(const char *address, uint16_t port)
 {
     struct sockaddr_in *cl_addr = (struct sockaddr_in *)(malloc(sizeof(struct sockaddr_in)));
     memset((void *)cl_addr, '\0', sizeof(struct sockaddr_in));
@@ -375,7 +375,7 @@ struct sockaddr_in *net_inet_addr(const char *address, uint16_t port)
 
 
 CPNET_NETWORK_API
-ssize_t net_write(socket_t socketfd, const char *buffer, size_t len)
+ssize_t cpnet_write(socket_t socketfd, const char *buffer, size_t len)
 {
     if(socketfd < 0)
         return -1;
@@ -386,7 +386,7 @@ ssize_t net_write(socket_t socketfd, const char *buffer, size_t len)
 #endif
 }
 
-CPNET_NETWORK_API int net_clean()
+CPNET_NETWORK_API int cpnet_clean()
 {
 #ifdef _WIN32
     return WSACleanup();
@@ -396,9 +396,9 @@ CPNET_NETWORK_API int net_clean()
 }
 
 CPNET_NETWORK_API
-const char *net_last_error()
+const char *cpnet_last_error()
 {
-    return cpnet_last_error;
+    return cpnet_last_error__;
 }
 
 static void net_set_last_error()
@@ -410,12 +410,12 @@ static void net_set_last_error()
                   MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
                   (LPTSTR)cpnet_last_error, 0, NULL);
 #elif defined(__linux__)
-    strcpy(cpnet_last_error, strerror(errno));
+    strcpy(cpnet_last_error__, strerror(errno));
 #endif
 }
 
 CPNET_NETWORK_API
-void net_close(socket_t socketfd)
+void cpnet_close(socket_t socketfd)
 {
 #if defined(_WIN32)
     closesocket(socketfd);

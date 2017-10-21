@@ -31,13 +31,13 @@ int main(int argc, char *argv[])
 #endif
 {
     /* Initialize networking API (if any needed) */
-    net_init();
+    cpnet_init();
     /* Start a server */
-    socket_t socket = net_socket(SOCK_DGRAM);
+    socket_t socket = cpnet_socket(SOCK_DGRAM);
     /* Bind on port UCP_PORT */
     uint16_t port = UDP_PORT;
-    if(net_bind(socket, NULL, &port) != 0) {
-        printf("System error description:\n%s\n", net_last_error());
+    if(cpnet_bind(socket, NULL, &port) != 0) {
+        printf("System error description:\n%s\n", cpnet_last_error());
         return -1;
     }
     /* Echo each message */
@@ -46,7 +46,7 @@ int main(int argc, char *argv[])
         char buffer[1024];
         char peer[46];
         uint16_t pport = 0;
-        ssize_t r = net_read_packet(socket, buffer, 1024, peer, &pport);
+        ssize_t r = cpnet_read_packet(socket, buffer, 1024, peer, &pport);
         if(r < 0) {
             printf("Unable to read from UDP socket!");
             return -1;
@@ -55,7 +55,7 @@ int main(int argc, char *argv[])
             printf("Remote client stopped\n");
             return 0;
         }
-        net_write_packet(socket, buffer, r, peer, pport);
+        cpnet_write_packet(socket, buffer, r, peer, pport);
     }
     return 0;
 }

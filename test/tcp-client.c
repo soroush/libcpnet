@@ -34,12 +34,12 @@ int main(int argc, char *argv[])
 {
     srand((unsigned int)time(NULL));
     /* Initialize networking API */
-    net_init();
+    cpnet_init();
     /* Start a client */
-    socket_t socket = net_socket(SOCK_STREAM);
+    socket_t socket = cpnet_socket(SOCK_STREAM);
     size_t tries = 5;
     /* Connect to port TCP_PORT */
-    while(net_connect(socket, "127.0.0.1", TCP_PORT) != 0 && tries) {
+    while(cpnet_connect(socket, "127.0.0.1", TCP_PORT) != 0 && tries) {
 #ifdef _WIN32
 		Sleep(2000);
 #else
@@ -58,8 +58,8 @@ int main(int argc, char *argv[])
         /* char *str = randstring(len); */
         char *str = randdata(len);
         char buffer[1024];
-        net_write(socket, str, len);
-        size_t read_size = net_read(socket, buffer, 1024);
+        cpnet_write(socket, str, len);
+        size_t read_size = cpnet_read(socket, buffer, 1024);
         if(read_size != len) {
             printf("Error: Expected to read %zd bytes, "
                    "though received %zd bytes.\n", len, read_size);
@@ -77,7 +77,7 @@ int main(int argc, char *argv[])
         free(str);
     }
     /* Finalize networking API */
-    net_clean();
+    cpnet_clean();
     return 0;
 }
 
