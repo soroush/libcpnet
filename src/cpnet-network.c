@@ -35,6 +35,7 @@
 #define   NI_MAXHOST 1025
 #endif
 
+static char cpnet_last_error__[1024];
 static void net_set_last_error();
 
 /**

@@ -45,8 +45,6 @@ typedef SOCKET socket_t;
 typedef SSIZE_T ssize_t;
 #endif
 
-static char cpnet_last_error__[1024];
-
 /**
  * \brief Initialize networking interface.
  */
