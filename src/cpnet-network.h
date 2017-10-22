@@ -105,6 +105,7 @@ CPNET_NETWORK_API int cpnet_listen(socket_t s, int backlog);
   */
 CPNET_NETWORK_API socket_t cpnet_accept(socket_t s, char *addr, uint16_t *port);
 CPNET_NETWORK_API ssize_t cpnet_read(socket_t s, char *buffer, size_t len);
+CPNET_NETWORK_API ssize_t cpnet_read2(socket_t s, char *buffer, size_t len, int flags);
 CPNET_NETWORK_API ssize_t cpnet_write(socket_t s, const char *buffer, size_t len);
 CPNET_NETWORK_API ssize_t cpnet_read_packet(socket_t s, char *buffer, size_t len,
         char *peer, uint16_t *port);

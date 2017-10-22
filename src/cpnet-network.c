@@ -290,6 +290,19 @@ ssize_t cpnet_read(socket_t socketfd, char *buffer, size_t len)
     return retval;
 }
 
+CPNET_NETWORK_API
+ssize_t cpnet_read2(socket_t socketfd, char *buffer, size_t len, int flags)
+{
+#if defined (__linux__)
+    ssize_t retval = recv(socketfd, buffer, len, MSG_NOSIGNAL | flags);
+#elif defined(_WIN32)
+    ssize_t retval = (ssize_t)(recv(socketfd, buffer, (int)len, 0));
+#endif
+    if(retval <= 0)
+        net_set_last_error();
+    return retval;
+}
+
 
 CPNET_NETWORK_API
 ssize_t cpnet_read_packet(socket_t socketfd, char *buffer,
