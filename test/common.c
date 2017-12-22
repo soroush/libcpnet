@@ -149,7 +149,7 @@ long nanodiff(struct timespec *a, struct timespec *b)
 void sleep_for(struct timespec *then, long sleep_value)
 {
     struct timespec now;
-    if(clock_gettime(CLOCK_REALTIME, (struct timeval*)(&now)) == -1) {
+    if(clock_gettime(CLOCK_REALTIME, (struct timespec*)(&now)) == -1) {
         fprintf(stderr, "Unable to get system clock\n%s\n", strerror(errno));
         exit(99);
     }
