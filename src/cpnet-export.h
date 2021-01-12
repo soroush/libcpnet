@@ -19,16 +19,29 @@
 #ifndef CPNET_EXPORT_H
 #define CPNET_EXPORT_H
 
-#ifdef _WIN32
-#ifdef CPNET_NETWORK_EXPORT
-#define CPNET_NETWORK_API __declspec(dllexport)
-#elif defined(CPNET_STATIC_LIBRARY)
-#define CPNET_NETWORK_API
+#if defined _WIN32 || defined __CYGWIN__ || defined __MINGW32__
+  #ifdef libcpnet_EXPORTS
+    #ifdef __GNUC__
+      #define CPNET_NETWORK_API __attribute__ ((dllexport))
+    #else
+      #define CPNET_NETWORK_API __declspec(dllexport)
+    #endif
+  #else
+    #ifdef __GNUC__
+      #define CPNET_NETWORK_API __attribute__ ((dllimport))
+    #else
+      #define CPNET_NETWORK_API __declspec(dllimport)
+    #endif
+  #endif
+  #define CPNET_NETWORK_PRIVATE
 #else
-#define CPNET_NETWORK_API __declspec(dllimport)
-#endif
-#else
-#define CPNET_NETWORK_API
+  #if __GNUC__ >= 4
+    #define CPNET_NETWORK_API __attribute__ ((visibility ("default")))
+    #define CPNET_NETWORK_PRIVATE  __attribute__ ((visibility ("hidden")))
+  #else
+    #define CPNET_NETWORK_API
+    #define CPNET_NETWORK_PRIVATE
+  #endif
 #endif
 
 #endif
